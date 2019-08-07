@@ -1,9 +1,9 @@
 <template lang="html">
     <div class="col-sm-6 col-md-4">
-        <div class="panel panel-success">
+        <div class="panel panel-info">
             <div class="panel-heading">
                 {{ stock.name }}
-                <small>(Price: {{ stock.price }})</small>
+                <small>(Price: {{ stock.price }} | Quantity: {{ stock.quantity }})</small>
             </div>
             <div class="panel-body">
                 <div class="pull-left">
@@ -12,8 +12,8 @@
                 <div class="pull-right">
                     <button
                         class="btn btn-success"
-                        @click="buyStock"
-                        :disabled="!hasEnough || quantity <= 0">Buy</button>
+                        @click="sellStock"
+                        :disabled="!hasEnough || quantity <= 0">{{ hasEnough ? 'Sell' : 'hasnt enought' }}</button>
                 </div>
             </div>
         </div>
@@ -28,17 +28,17 @@ export default {
             return this.$store.getters.funds
         },
         hasEnough() {
-            return this.quantity * this.stock.price <= this.funds
+            return this.quantity <= this.stock.quantity
         }
     },
     methods: {
-        buyStock() {
+        sellStock() {
             const order = {
                 stockId: this.stock.id,
                 stockPrice: this.stock.price,
                 quantity: this.quantity
             };
-            this.$store.dispatch('buyStock', order);
+            this.$store.dispatch('sellStock', order);
             this.quantity = 0;
         }
     },
